@@ -18,9 +18,9 @@
             <div class="login__column">
                 <div class="login__box">
                     <img src="images/loginLogo.png" class="login__logo" />
-                    <form action="feed.html" method="get" class="login__form">
-                        <input type="text" name="username" placeholder="Username" required />
-                        <input type="password" name="password" placeholder="Password" required />
+                    <form action="profile.html" class="login__form" id="myForm" onsubmit="return myFunction(event)">
+                        <input class="username" type="text" name="username" placeholder="Username" required />
+                        <input class="password" type="password" name="password" placeholder="Password" required />
                         <input type="submit" value="Log in" />
                     </form>
                     <span class="login__divider">or</span>
