@@ -18,7 +18,7 @@
             <div class="login__column">
                 <div class="login__box">
                     <img src="images/loginLogo.png" class="login__logo" />
-                    <form action="profile.html" class="login__form" id="myForm" onsubmit="return myFunction(event)">
+                    <form action="profile.html" class="login__form" id="myForm" >
                         <input class="username" type="text" name="username" placeholder="Username" required />
                         <input class="password" type="password" name="password" placeholder="Password" required />
                         <input type="submit" value="Log in" />
@@ -63,5 +63,74 @@
                 <span class="footer__copyright">© 2017 Vietgram</span>
             </div>
         </footer>
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+            https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+
+        <script>
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            var firebaseConfig = {
+              apiKey: "AIzaSyA6vU55U_9I63T8jyINpmZnrLcXLGmbRpk",
+              authDomain: "cybersecurity-749ff.firebaseapp.com",
+              databaseURL: "https://cybersecurity-749ff.firebaseio.com",
+              projectId: "cybersecurity-749ff",
+              storageBucket: "cybersecurity-749ff.appspot.com",
+              messagingSenderId: "630779539455",
+              appId: "1:630779539455:web:bb378d53e5fe72006101ca",
+              measurementId: "G-9QCP5MLRVX"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            firebase.analytics();
+            console.log(firebase);
+            var database = firebase.database();
+
+            firebase.database().ref('/users/').once('value').then(function(snapshot) {
+                var usernameF = (snapshot.val()) || 'Anonymous';
+                console.log(usernameF);
+                // ...
+            });
+
+            $('#myForm').submit(function(event){
+                event.preventDefault();
+                const username = document.querySelector('.username');
+                const password = document.querySelector('.password');
+                console.log(username.value, password.value); 
+                let id = localStorage.getItem('id');
+                const user = {
+                    username:username.value, password:password.value
+                }
+                // event.preventDefault();
+                const users = JSON.parse(localStorage.getItem('users'));
+                users.push(user);
+                localStorage.setItem('users', JSON.stringify(users))
+                localStorage.setItem(`user_${id}`, JSON.stringify(user));
+                id++;
+                localStorage.setItem('id', id);
+                firebase.database().ref('/users/').once('value').then(function(snapshot) {
+                    var usersF = (snapshot.val()) || 'Anonymous';
+                    console.log(usersF);
+                    firebase.database().ref('users/' + usersF.length).set({
+                    username: username.value,
+                    password: password.value,
+                });
+                $('#myForm').unbind('submit').submit()
+                });
+            });
+          </script>
+
+        <script>
+            if(!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([]))
+            }
+        </script>
     </body>
 </html>
